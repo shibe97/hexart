@@ -16,14 +16,14 @@
     var ctx = canvas.getContext('2d');
 
     window.Hexart = (function(){
-        var Hex = function(ctx, x, y, r, angle, color, fixed){
+        var Hex = function(ctx, x, y, offsetX, offsetY, r, angle, color, fixed){
             this.x = x;
             this.y = y;
             this.r = r;
             this.angle = angle;
             this.color = color;
-            this.xPos = x * (Math.sqrt(3) / 2) * r;
-            this.yPos = y * 1.5 * r;
+            this.xPos = x * (Math.sqrt(3) / 2) * r + offsetX;
+            this.yPos = y * 1.5 * r + offsetY;
             this.rotateFlag = false;
             this.rotateTimer = 0;
             this.rotateCenter = 0; // 0:回転なし, 1:左下, 2:左上, 3:上, 4:右上, 5:右下, 6:下
@@ -63,12 +63,12 @@
 
                     if(this.rotateDirection === 1){
                         this.angle = 90 + this.rotateTimer;
-                        this.xPos = this.x * (Math.sqrt(3) / 2) * this.r + Math.cos(theta*Math.PI/180) * this.r + this.r * Math.cos((-90 + this.rotateCenter * 60 + this.rotateTimer)*Math.PI/180);
-                        this.yPos = this.y * 1.5 * this.r + Math.sin(theta*Math.PI/180) * this.r + this.r * Math.sin((-90 + this.rotateCenter * 60 + this.rotateTimer)*Math.PI/180);
+                        this.xPos = this.x * (Math.sqrt(3) / 2) * this.r + Math.cos(theta*Math.PI/180) * this.r + this.r * Math.cos((-90 + this.rotateCenter * 60 + this.rotateTimer)*Math.PI/180) + offsetX;
+                        this.yPos = this.y * 1.5 * this.r + Math.sin(theta*Math.PI/180) * this.r + this.r * Math.sin((-90 + this.rotateCenter * 60 + this.rotateTimer)*Math.PI/180) + offsetY;
                     } else if(this.rotateDirection === 2){
                         this.angle = 90 - this.rotateTimer;
-                        this.xPos = this.x * (Math.sqrt(3) / 2) * this.r + Math.cos(theta*Math.PI/180) * this.r + this.r * Math.cos((-90 + this.rotateCenter * 60 - this.rotateTimer)*Math.PI/180);
-                        this.yPos = this.y * 1.5 * this.r + Math.sin(theta*Math.PI/180) * this.r + this.r * Math.sin((-90 + this.rotateCenter * 60 - this.rotateTimer)*Math.PI/180);
+                        this.xPos = this.x * (Math.sqrt(3) / 2) * this.r + Math.cos(theta*Math.PI/180) * this.r + this.r * Math.cos((-90 + this.rotateCenter * 60 - this.rotateTimer)*Math.PI/180) + offsetX;
+                        this.yPos = this.y * 1.5 * this.r + Math.sin(theta*Math.PI/180) * this.r + this.r * Math.sin((-90 + this.rotateCenter * 60 - this.rotateTimer)*Math.PI/180) + offsetY;
                     }
                 } else {
                     this.rotateTimer = 0;
@@ -288,22 +288,26 @@
              * Hexart
              * @param {number} row
              * @param {number} col
+             * @param {number} r
              *
              */ 
-            init : function(row, col){
-                this.createHexes(row, col);
+            init : function(row, col, r){
+                this.createHexes(row, col, r);
                 setInterval(moveHex, 1500);
                 this.loop();
             },
-            createHexes : function(row, col){
+            createHexes : function(row, col, r){
+                var offsetX = (canvas.width - (Math.sqrt(3) / 2) * r * (row+1)) / 2;
+                var offsetY = (canvas.height - 1.5 * r * (col+1)) / 2;
+
                 for(var i=1; i<=row; i++){
                     for(var j=1; j<=col; j++){
                         if((i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1)){
                             var random = Math.random();
                             if(random > 0.9){
-                                hexes.push(new Hex(ctx, i, j, 50, 90, "#eee", true));
+                                hexes.push(new Hex(ctx, i, j, offsetX, offsetY, r, 90, "#eee", true));
                             } else if(random > 0.5) {
-                                hexes.push(new Hex(ctx, i, j, 50, 90, "#"+Math.floor(Math.random() * 0xFFFFFF).toString(16)));
+                                hexes.push(new Hex(ctx, i, j, offsetX, offsetY, r, 90, "#"+Math.floor(Math.random() * 0xFFFFFF).toString(16)));
                             }
                         }
                     }
