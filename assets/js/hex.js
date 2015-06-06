@@ -291,12 +291,13 @@
              * @param {number} r
              *
              */ 
-            init : function(row, col, r){
-                this.createHexes(row, col, r);
+            init : function(setting){
+                this.createHexes(setting.row, setting.col, setting.r, setting.fixed);
                 setInterval(moveHex, 1500);
                 this.loop();
             },
-            createHexes : function(row, col, r){
+
+            createHexes : function(row, col, r, fixedArray){
                 var offsetX = (canvas.width - (Math.sqrt(3) / 2) * r * (row+1)) / 2;
                 var offsetY = (canvas.height - 1.5 * r * (col+1)) / 2;
 
@@ -305,14 +306,17 @@
                         if((i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1)){
                             var random = Math.random();
                             if(random > 0.9){
-                                hexes.push(new Hex(ctx, i, j, offsetX, offsetY, r, 90, "#eee", true));
-                            } else if(random > 0.5) {
-                                hexes.push(new Hex(ctx, i, j, offsetX, offsetY, r, 90, "#"+Math.floor(Math.random() * 0xFFFFFF).toString(16)));
+                                hexes.push(new Hex(ctx, i, j, offsetX, offsetY, r, 90, "#ccc"));
                             }
                         }
                     }
                 }
+
+                fixedArray.forEach(function(fixed){
+                    hexes.push(new Hex(ctx, fixed.x, fixed.y, offsetX, offsetY, r, 90, fixed.color, true));
+                });
             },
+
             loop : function(){
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 hexes.forEach(function(_hex, index){

@@ -14,7 +14,36 @@
         <canvas id="canvas"></canvas>
         <script src="assets/js/hex.js"></script>
         <script type="text/javascript">
-            Hexart.init(20, 8, 50);
+            Hexart.init({
+                row: 20,
+                col: 8,
+                r: 50,
+                fixed: [{
+                    x: 4,
+                    y: 2,
+                    color: "#55acee"
+                },
+                {
+                    x: 5,
+                    y: 3,
+                    color: "#315096"
+                },
+                {
+                    x: 8,
+                    y: 2,
+                    color: "#dd4b39"
+                },
+                {
+                    x: 15,
+                    y: 1,
+                    color: "#008fde"
+                },
+                {
+                    x: 14,
+                    y: 4,
+                    color: "#ee4056"
+                }]
+            });
         </script>
     </body>
 </html>
