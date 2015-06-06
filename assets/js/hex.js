@@ -15,8 +15,7 @@
     canvas.height = window.innerHeight;
     var ctx = canvas.getContext('2d');
 
-    window.Hexart = (function(x, y){
-        
+    window.Hexart = (function(){
         var Hex = function(ctx, x, y, r, angle, color, fixed){
             this.x = x;
             this.y = y;
@@ -284,20 +283,27 @@
         
 
         return {
-            init : function(x, y){
-                this.createHexes(x, y);
+            
+            /**
+             * Hexart
+             * @param {number} row
+             * @param {number} col
+             *
+             */ 
+            init : function(row, col){
+                this.createHexes(row, col);
                 setInterval(moveHex, 1500);
                 this.loop();
             },
-            createHexes : function(x, y){
-                for(var i=1; i<=x; i++){
-                    for(var j=1; j<=y; j++){
+            createHexes : function(row, col){
+                for(var i=1; i<=row; i++){
+                    for(var j=1; j<=col; j++){
                         if((i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1)){
                             var random = Math.random();
-                            if(random > 0.8){
-                                hexes.push(new Hex(ctx, i, j, 50, 90, "#ccc"));
-                            } else if(random > 0.6) {
-                                hexes.push(new Hex(ctx, i, j, 50, 90, "#000", true));
+                            if(random > 0.9){
+                                hexes.push(new Hex(ctx, i, j, 50, 90, "#eee", true));
+                            } else if(random > 0.5) {
+                                hexes.push(new Hex(ctx, i, j, 50, 90, "#"+Math.floor(Math.random() * 0xFFFFFF).toString(16)));
                             }
                         }
                     }
